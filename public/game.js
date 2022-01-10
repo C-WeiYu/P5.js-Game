@@ -38,6 +38,8 @@ let sprite_list_bonus = [0]; //要加新角色就多用一個list
 let sprite_list_bonus2 = [0,0,0]; //要加新角色就多用一個list
 let sprite_list_all = [...sprite_list,...sprite_list_bonus,...sprite_list_bonus2];
 
+let sounds = {};
+
 // let xLable
 let yLabel = 350; 
 let yLabelList = [350,400,450,500,550];
@@ -67,8 +69,8 @@ let time_bar_reduce_freq = total_game_timer/10;
 let time_bar_counter = 1;
 
 // 優先名單
-let soldier_target_num = 0;
-let greencard_target_num = 0;
+let soldier_target_num = 5;
+let greencard_target_num = 10;
 let people_count = 0;
 let soldier_count = 0;
 let greencard_count = 0;
@@ -128,8 +130,10 @@ function click_detect() {
                 if (game2_frames) {
                     sprite_list_all[q].position.y = 1000;
                     sprite_list_all[q].hide = true;
+        
                 } else {
                     sprite_list_all[q].position.y = yLabelList[getRandomInt(yLabelList.length)];
+            
                 }
                 /* 平等加分 */
                 score += 1;
@@ -138,7 +142,7 @@ function click_detect() {
                 if (sprite_list_all[q].role == "People"){people_count += 1}
                 if (sprite_list_all[q].role == "Soldier"){soldier_count += 1}
                 if (sprite_list_all[q].role == "Greencard"){greencard_count += 1}
-
+                break
 
                 /* 不平等加分 */
                 // if (sprite_list_all[q].role == "People"){
@@ -227,7 +231,7 @@ function role_step2(g) {
     }
     if (sprite_list_all[g].position.x > 10 && sprite_list_all[g].position.x <900){
         if(sprite_list_all[g].position.y >300){
-            run_way(g,(300-sprite_list_all[g].position.x)/200  ,(Math.random()*100%5-people_run_speed_base)/5);                
+            run_way(g,(200-sprite_list_all[g].position.x)/100  ,(Math.random()*100%5-people_run_speed_base)/5);                
         }
         else{
             run_way(g,0,0,0,0);
@@ -262,6 +266,7 @@ function prioritylist_step() {
 
 // p5js ==========================================
 function preload() {
+    sounds.war = createAudio('voice.mp3');
     background_img = loadImage(game_background_img_path);
     plane = loadImage(game_palne_path);
     plane_close = loadImage(game_palne_colse_path);
@@ -313,6 +318,8 @@ function preload() {
 function setup() {
     createCanvas(1000, 600);
     // plane.width = 700;
+
+    sounds.war.play();
 
     /* 角色移動 */ 
     for (let g = 0 ; g < sprite_list_all.length ; g++){
